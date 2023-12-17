@@ -1,13 +1,15 @@
 #include <stdlib.h>
 #include <iostream>
+#include "Utils.hpp"
 
 class Golfer {
     public:
         std::string fName;
         std::string lName;
-        int roundsPlayed;
 
         Golfer();
+
+        void greet();
 
 
 
@@ -18,11 +20,14 @@ class Golfer {
       
 };
 
+void Golfer::greet(){
+    std::cout << "Welcome, " << fName << "!" << std::endl;
+}
+
+
 Golfer::Golfer()
+:fName(strIn("first name")), lName(strIn("last name"))
 {
-    std::cout << "Hello, please enter your first and last name" << std::endl << "-> ";
-    std::string testString;
-    getline(std::cin, testString);
-    fName = testString;
+   greet();
 }
 

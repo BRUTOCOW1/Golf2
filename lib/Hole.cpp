@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include "Utils.hpp"
+#include "Club.cpp"
 #include "Shot.cpp"
 
 class Hole {
@@ -8,26 +10,40 @@ class Hole {
 
 
 
-        enum TTG { TTGSTRAIGHT, RIGHT, LEFT};
-        enum Shape { STRAIGHT, DOGLEG };
-        enum Topo {FLAT, UP, DOWN};
-        enum Hazards {WATER, GREENSIDEBUNKER, FAIRWAYBUNKER};
-        enum Obstructions {TREE, BLIND};
         
-        Hole(int number, int par, int distance, Shape shape);
+        Hole(int number);
+
+        void play();
+
+
+
 
 
     protected:
 
         std::string name;
         int par;
+        int distance;
+
         std::vector<Shot> shots;
+
+        bool ballInHole;
         
 };
 
-Hole::Hole(int number, int par, int distance, Shape shape)
-    :name(std::to_string(number)), par(par)
+Hole::Hole(int number)
+    :name(std::to_string(number)),
+    par(intIn("par")),
+    distance(intIn("distance")),
+    ballInHole(false)
 {
-    std::cout << "What foin down";
 }
 
+void Hole::play(){
+    while (!ballInHole)
+    {
+        Shot a;
+        a.hit();
+        shots.push_back(a);
+    }     
+}

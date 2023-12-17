@@ -3,43 +3,31 @@
 #include <ostream>
 
 
-
-
 class Shot {
-
-    enum Direction {Hook, Draw, Straight, Fade, Slice};
-    enum Type {Tee, Fairway, Rough, Approach, Pitch, Chip, Putt};
 
     public:
 
-    Shot(Direction direction, Type type, int distance);
+    Shot();
 
-
-    std::string operator<<(Shot s){
-        return "";
-    }
-
-
-
+    void hit();
 
     protected:
 
-        
-
-
-        Direction direction;
-        Type type;
+        Club c;
+        ShotDirection direction;
+        ShotType type;
         int distance;
+
 
 };
 
 
-
-
-Shot::Shot(Direction direction, Type type, int distance)
-    : direction(direction), type(type), distance(distance)
+Shot::Shot()
+    : direction(shotDirections[strIn("Direction")]), type(shotTypes[strIn("type")]), distance(intIn("distance"))
 {
-    std::cout << "Hey idiot";
 }
 
+void Shot::hit(){
+    distance = intIn("how far the ball went");
 
+}

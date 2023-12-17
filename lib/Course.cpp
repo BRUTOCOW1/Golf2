@@ -2,17 +2,13 @@
 #include <iostream>
 #include <string> 
 #include <vector>
-#include "Utils.cpp"
+#include "Utils.hpp"
 #include "Hole.cpp"
 
 class Course {
     public:
 
-
-        Course();
-
-        void printCourse();
-
+        Course();        
 
     protected:
 
@@ -21,11 +17,7 @@ class Course {
         std::vector<Hole> holes;
 };
 
-void Course::printCourse(){
-    std::cout << "Course name: " << name << std::endl;
-    std::cout << "Course par: " << par << std::endl;
+Course::Course() 
+    : name(strIn("Course Name")), par(intIn("Par"))
+{
 }
-
-
-
-Course::Course() : name(getInput("Course Name")), par(stoi(getInput("Par"))) {}

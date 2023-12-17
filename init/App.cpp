@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string> 
 #include "../lib/Round.cpp"
+#include "../lib/Utils.hpp"
+
 using namespace std;
 
 class GolfDataFactory {
@@ -31,8 +33,17 @@ bool GolfDataFactory::initialize(){
 
 void GolfDataFactory::process(){
     Round round;
+    std::string buffer;
+
+    buffer = strIn(" to begin your round");
+    if (buffer != "tits")
+    {
+        round.start();
+    }
+
 }
 
 int main(){
    GolfDataFactory theFact;
+   return 1;
 }

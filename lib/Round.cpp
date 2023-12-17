@@ -2,11 +2,11 @@
 #include <iostream>
 #include "Course.cpp"
 #include "Golfer.cpp"
+#include "Utils.hpp"
 
 
 class Round {
     public:
-        int score;
 
         Golfer golfer;
         
@@ -14,8 +14,11 @@ class Round {
 
         Round();
 
-        std::vector<int> scoreCard;
-        int score;
+        
+
+        void start();
+
+        void playHole(int holeNum);
 
 
 
@@ -23,17 +26,29 @@ class Round {
 
 
     protected:
+        std::vector<int> scoreCard;
+        std::vector<Hole> holes;
+        int numHoles;
 
+        int score;
 
 };
 
 Round::Round()
-    
+    :score(0), numHoles(intIn("number of holes"))
 {
-    std::cout << "goomba";
-    // TODO: Figure out how to split strings in c++.
-    //This implementation is going to manually search for a space..
+    popAllOpts();
+}
 
+void Round::start(){
+    for (int i = 0; i < numHoles; i++) {
+        playHole(i);
+    }
 
 }
 
+void Round::playHole(int holeNum){
+    Hole h(holeNum);
+    h.play();
+    holes.push_back(h);
+}
