@@ -11,14 +11,10 @@
 #include <map>
 #include <fstream>
 
+
 using namespace std;
 
-
-
-
-
 std::string twoBreaks = "\n \n";
-
 
 constexpr unsigned int str2int(const char* str, int h = 0)
 {
@@ -30,6 +26,16 @@ string strIn(string prompt)
     cout << "Please Enter " << prompt << ": ";
     std::string payload;
     getline(cin,payload,'\n');
+    return payload;
+}
+
+string strInLow(string prompt)
+{
+    cout << "Please Enter " << prompt << ": ";
+    std::string payload;
+    getline(cin,payload,'\n');
+    transform(payload.begin(), payload.end(), payload.begin(), ::tolower);
+
     return payload;
 }
 
@@ -61,6 +67,7 @@ enum class ClubModel {PUTTER, WEDGE, IRON, WOOD};
 /* Holes */
 enum class HoleTTG { TTGSTRAIGHT, RIGHT, LEFT};
 enum class HoleShape { HOLESTRAIGHT, DOGLEG };
+enum class HolePar { THREE, FOUR, FIVE };
 enum class HoleTopo {FLAT, UP, DOWN};
 enum class HoleHazard {WATER, BUNKER, MANMADE};
 
@@ -70,22 +77,28 @@ enum class ShotError {PUSH, PULL, TOP, DUFF, SHANK, NONE};
 enum class ShotType {TEE, FAIRWAY, APPROACH, PITCH, BUNKER, CHIP, PUTT};
 
 
+enum class Score {ALBATROSS, EAGLE, BIRDIE, PAR, BOGEY, DBOGEY, TBOGEY, QBOGEY};
+
+
 /** Vectors */
 
 /* Clubs */
-std::vector<std::string> clubMakeNames{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Pitching", "Gap", "Sand"};
-std::vector<std::string> clubModelNames{"Putter", "Wedge", "Iron", "Wood"};
+std::vector<std::string> clubMakeNames{"two", "three", "four", "five", "six", "seven", "eight", "nine", "pitching", "gap", "sand"};
+std::vector<std::string> clubModelNames{"putter", "wedge", "iron", "wood"};
 
 /* Holes */
-std::vector<std::string> holeTTGNames{"Straight", "Right", "Left"};
-std::vector<std::string> holeShapeNames{"Straight", "Dogleg"};
-std::vector<std::string> holeTopoNames{"Flat", "Up", "Down"};
-std::vector<std::string> holeHazardNames{"Water", "Bunker", "MANMADE"};
+std::vector<std::string> holeTTGNames{"straight", "right", "left"};
+std::vector<std::string> holeShapeNames{"straight", "dogleg"};
+std::vector<std::string> holeParNames{"three", "four", "five"};
+std::vector<std::string> holeTopoNames{"flat", "up", "down"};
+std::vector<std::string> holeHazardNames{"water", "bunker", "manmade"};
 
 /* Shots */
-std::vector<std::string> shotDirectionNames{"Hook", "Draw", "Straight", "Fade", "Slice"};
-std::vector<std::string> shotErrorNames{"Push", "Pull", "Top", "Duff", "Shank", "None"};
-std::vector<std::string> shotTypeNames{"Tee", "Fairway", "Approach", "Pitch", "Bunker", "Chip", "Putt"};
+std::vector<std::string> shotDirectionNames{"hook", "draw", "straight", "fade", "slice"};
+std::vector<std::string> shotErrorNames{"push", "pull", "top", "duff", "shank", "none"};
+std::vector<std::string> shotTypeNames{"tee", "fairway", "approach", "pitch", "bunker", "chip", "putt"};
+
+std::vector<std::string> scoreNames {"Albatross", "Eagle", "Birdie", "Par", "Bogey", "Double Bogey", "Triple Bogey", "Quad Bogey"};
 
 
 /** Maps */
@@ -131,5 +144,7 @@ void popAllOpts(){
 
 
 }
+
+
 
 #endif // MYENUM_HPP

@@ -22,7 +22,7 @@ class Club {
 
 Club::Club()
 {
-    stringToClub(strIn("Club (Make and Model)"));
+    stringToClub(strInLow("Club (Make and Model)"));
 }
 
 void Club::stringToClub(std::string dir){

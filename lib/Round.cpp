@@ -20,6 +20,8 @@ class Round {
 
         void playHole(int holeNum);
 
+        void printScorecard();
+
 
 
 
@@ -41,14 +43,19 @@ Round::Round()
 }
 
 void Round::start(){
-    for (int i = 0; i < numHoles; i++) {
+    for (int i = 1; i <= numHoles; i++) {
+        std::cout << "Now Playing Hole #" << i << std::endl;
+
         playHole(i);
     }
 
 }
 
 void Round::playHole(int holeNum){
+    
     Hole h(holeNum);
     h.play();
     holes.push_back(h);
+    scoreCard.push_back(h.getScore());
 }
+
