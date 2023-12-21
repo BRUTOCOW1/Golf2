@@ -3,8 +3,6 @@
 #include <map>
 #include "Utils.hpp"
 
-
-
 class Club {
     public:
         std::string name;
@@ -14,10 +12,8 @@ class Club {
 
     protected:
 
-
         ClubMake make;
         ClubModel model;
-
 };
 
 Club::Club()

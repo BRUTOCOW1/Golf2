@@ -35,7 +35,7 @@ void GolfDataFactory::process(){
     Round round;
     std::string buffer;
 
-    buffer = strIn(" to begin your round");
+    buffer = strIn("to begin your round");
     if (buffer != "tits")
     {
         round.start();

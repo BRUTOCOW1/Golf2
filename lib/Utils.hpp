@@ -39,6 +39,23 @@ string strInLow(string prompt)
     return payload;
 }
 
+string strInLow(string prompt, std::vector<std::string>& vec)
+{
+    cout << "Please Enter " << prompt << ": " << endl;
+    cout << "Options:" << endl;
+    for (auto i : vec)
+    {
+        cout << i << "      "; 
+    }
+
+    std::string payload;
+    getline(cin,payload,'\n');
+    transform(payload.begin(), payload.end(), payload.begin(), ::tolower);
+
+    return payload;
+}
+
+
 int intIn(string prompt)
 {
     cout << "Please Enter " << prompt << ": ";
@@ -77,6 +94,12 @@ enum class ShotError {PUSH, PULL, TOP, DUFF, SHANK, NONE};
 enum class ShotType {TEE, FAIRWAY, APPROACH, PITCH, BUNKER, CHIP, PUTT};
 
 
+/* Lie */
+enum class LiePlacement {RIGHT, LEFT, FRONT, BACK, CENTER, RIGHTCENTER, LEFTCENTER };
+enum class LieLocation {TEEBOX, ROUGH, FAIRWAY, FRINGE, GREEN, BUNKER, HAZARD};
+
+
+/* Scoring */
 enum class Score {ALBATROSS, EAGLE, BIRDIE, PAR, BOGEY, DBOGEY, TBOGEY, QBOGEY};
 
 
@@ -98,7 +121,13 @@ std::vector<std::string> shotDirectionNames{"hook", "draw", "straight", "fade", 
 std::vector<std::string> shotErrorNames{"push", "pull", "top", "duff", "shank", "none"};
 std::vector<std::string> shotTypeNames{"tee", "fairway", "approach", "pitch", "bunker", "chip", "putt"};
 
+
+/* Scoring*/
 std::vector<std::string> scoreNames {"Albatross", "Eagle", "Birdie", "Par", "Bogey", "Double Bogey", "Triple Bogey", "Quad Bogey"};
+
+/* Lies */
+std::vector<std::string> liePlacementNames {"right", "left", "front", "back", "center", "center right", "center left"};
+std::vector<std::string> lieLocationNames {"tee box", "rough", "fairway", "fringe", "green", "bunker", "hazard"};
 
 
 /** Maps */
@@ -118,7 +147,9 @@ std::map<std::string, ShotDirection> shotDirections;
 std::map<std::string, ShotError> shotErrors;
 std::map<std::string, ShotType> shotTypes;
 
-
+/* Lies */
+std::map<std::string, LiePlacement> liePlacements;
+std::map<std::string, LieLocation> lieLocations;
 
 template<typename T>
 void popOpts(const std::vector<string>& sv, std::map<string, T>& mp){
@@ -126,7 +157,6 @@ void popOpts(const std::vector<string>& sv, std::map<string, T>& mp){
     for (std::size_t i = 0; i < sv.size(); i++){
         mp[sv[i]] = static_cast<T>(i);
     }
-
 }
 
 void popAllOpts(){
@@ -141,6 +171,9 @@ void popAllOpts(){
     popOpts<ShotDirection>(shotDirectionNames, shotDirections);
     popOpts<ShotError>(shotErrorNames, shotErrors);
     popOpts<ShotType>(shotTypeNames, shotTypes);
+
+    popOpts<LiePlacement>(liePlacementNames, liePlacements);
+    popOpts<LieLocation>(lieLocationNames, lieLocations);
 
 
 }
