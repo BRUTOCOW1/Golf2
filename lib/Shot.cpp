@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <ostream>
-
+#include "Lie.cpp"
 
 class Shot {
 
@@ -14,10 +14,11 @@ class Shot {
     bool isMake();
 
     protected:
-
-        Club c;
-        ShotDirection direction;
         ShotType type;
+        Club c;
+        Lie lie;
+        ShotDirection direction;
+        
         int distance;
 
         bool made;
@@ -28,6 +29,8 @@ class Shot {
 Shot::Shot()
     :  type(shotTypes[strInLow("Shot Type")]), made(false)
 {
+    lie.eval(type);
+
 }
 
 void Shot::hit(){

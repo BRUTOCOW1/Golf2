@@ -64,7 +64,7 @@ Score Hole::deduceScore(){
         case 4: hP = 1; break;
         case 5: hP = 2; break;
     }
-    int fScore = par-hP + (score-par);
+    int fScore = score-hP;
 
     Score inWith = static_cast<Score>(fScore);
 
