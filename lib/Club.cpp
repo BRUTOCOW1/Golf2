@@ -2,7 +2,6 @@
 #include <iostream>
 #include <map>
 #include "Utils.hpp"
-
 class Club {
     public:
         std::string name;

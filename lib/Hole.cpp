@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
-#include "Utils.hpp"
 #include "Club.cpp"
 #include "Shot.cpp"
+#include "Utils.hpp"
 
 class Hole {
      public:

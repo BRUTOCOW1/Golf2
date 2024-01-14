@@ -7,11 +7,11 @@ class Shot {
 
     public:
 
-    Shot();
+        Shot();
 
-    void hit();
+        void hit();
 
-    bool isMake();
+        bool isMake();
 
     protected:
         ShotType type;

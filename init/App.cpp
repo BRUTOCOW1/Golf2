@@ -1,10 +1,18 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string> 
+#include "GDBI.hpp"
+#include "../lib/Course.hpp"
 #include "../lib/Round.cpp"
-#include "../lib/Utils.hpp"
 
 using namespace std;
+
+std::string getInput()
+{
+    std::string input;
+    std::getline(std::cin, input);
+    return input;
+}
 
 class GolfDataFactory {
     public:
@@ -32,14 +40,22 @@ bool GolfDataFactory::initialize(){
 }
 
 void GolfDataFactory::process(){
-    Round round;
-    std::string buffer;
-
-    buffer = strIn("to begin your round");
-    if (buffer != "tits")
+    std::string userIn{getInput()};
+    if (userIn == "round")
     {
-        round.start();
+        Round round;
+        std::string buffer;
+
+        buffer = strIn("to begin your round");
+        if (buffer != "tits")
+        {
+            round.start();
+        }
+    } else {
+        GDBI gdbi;
+        CourseBuilder cb;
     }
+   
 
 }
 
@@ -47,3 +63,4 @@ int main(){
    GolfDataFactory theFact;
    return 1;
 }
+
