@@ -57,14 +57,6 @@ def tee(window):
 def putt(window):
     return 34
 
-def labelFrame(window, text1, text2, row):
-    frame = ttk.LabelFrame(window, text=text1)
-    frame.grid(row=row, column=0, columnspan=2, padx=10, pady=10, sticky=tk.W)
-
-    label = ttk.Label(frame, text=text2)
-    label.grid(row=0, column=0, sticky=tk.W)
-    return frame, label
-
 def comboBox(stringList, frame, row):
     combobox = ttk.Combobox(frame, values=stringList, state="readonly")
     combobox.grid(row=row, column=1, padx=10, pady=10)
