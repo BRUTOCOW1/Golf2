@@ -5,7 +5,6 @@
 GDBI::GDBI()
 {
     connect();
-    disconnect();
 }
 
 void GDBI::connect() {

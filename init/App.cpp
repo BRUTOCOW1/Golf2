@@ -53,6 +53,8 @@ void GolfDataFactory::process(){
         }
     } else {
         GDBI gdbi;
+        gdbi.select("SELECT * FROM Tadpoles;");
+        gdbi.disconnect();
         CourseBuilder cb;
     }
    
