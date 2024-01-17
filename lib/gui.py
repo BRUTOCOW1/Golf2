@@ -1,150 +1,217 @@
 import sys
-import tkinter as tk
 from tkinter import ttk
-import csv
-import argparse
-from enum import Enum
-
+from Utils import *
 
 class GUI:
-    def __init__(self, gui, course, hole):
-        self.window = createGui(course+gui)
-        self.hole = hole
-
-
+    def __init__(self, winName):
+        self.window = createGui(winName)
 
 class courseBuilder(GUI):
-    def __init__(self, gui, course, hole):
-        GUI.__init__(self, gui, course, hole)
-
-class ShotType(Enum):
-        Tee = 1
-        Approach = 2
-        Pitch = 3
-        Chip = 4
-        Putt = 5
+    def __init__(self, hole):
+        GUI.__init__(self, hole)
 
 class shot(GUI):
-    def __init__(self, gui, course, hole, shot, sType):
-        super().__init__(gui, course, hole)
+    def __init__(self, shot, winName):
+        super().__init__(winName)
         self.shot = shot
-        self.sType = ShotType.Approach.value
-        loftedShot(self.window)
-        self.window.mainloop()
+        self.putting = False
+        self.inHole = False
 
-def process_command_line_arguments():
-    parser = argparse.ArgumentParser(description='Description of your script.')
+        self.aims = ["Fairway", "Green"]
 
-    # Define command-line arguments
-    parser.add_argument('course', type=str, help='Course')
-    parser.add_argument('gui', type=str, help='Gui')
+        self.elevChanges = ["Downhill", "Flat (No elev change)", "Uphill"]
 
-    # Parse the command-line arguments
-    args = parser.parse_args()
+        self.directions = ["Left", "Center", "Right"]
 
-    # Access the parsed arguments
-    return args.course, args.gui
+        self.endLocations = self.aims + ["Hazard", "Bunker", "Out of Bounds", "Rough", "Fringe"]
 
+        self.heights = ["Low", "Medium", "High"]
 
-def createGui(title):
-    window = tk.Tk()
-    window.title(title)
-    return window
+        self.shapes = ["Hook", "Draw", "Straight", "Fade", "Slice"]
 
-def tee(window):
-    return 23
+        self.severities = ["N/A", "Perceptible", "Mild", "Moderate", "Severe", "Catastrophic"]
 
-def putt(window):
-    return 34
+        self.blunders = ["Push", "Pull", "Top", "Thin", "Duff", "Flub", "Mystery"]
+        
+        self.clubs = ["Driver", "4 Wood" ] + [str(i) + " iron" for i in range(2, 11)] + ["46 Degree Wedge", "Pitching Wedge", "Gap Wedge", "Sand Wedge"]
 
-def comboBox(stringList, frame, row):
-    combobox = ttk.Combobox(frame, values=stringList, state="readonly")
-    combobox.grid(row=row, column=1, padx=10, pady=10)
-    return combobox
+    def hit_submit(self, submitList):
+        self.submit_button_clicked(submitList)
+        self.window.destroy()
 
-def LabelEntry(frame, text, row):
-    label = ttk.Label(frame, text=text)
-    label.grid(row=row, column=0, sticky=tk.W)
+    def submit_button_clicked(self, submitList):
 
-    entry = ttk.Entry(frame)
-    entry.grid(row=row, column=1, padx=10, pady=10)
-
-    return label, entry
-
-def labelCombobox(frame, text, row, stringList):
-    label = ttk.Label(frame, text=text)
-    label.grid(row=row, column=0, sticky=tk.W)
-    return label, comboBox(stringList, frame, row)
-
-
-def loftedShot(window):
-
-    shot_number_frame = ttk.LabelFrame(window, text="Shot #: ")
-    shot_number_frame.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky=tk.W)
-
-    shot_number_label, shot_number_combobox = labelCombobox(shot_number_frame, "Shot #: ", 0, [str(i) for i in range(1, 19)])
-
-    meta_frame = ttk.LabelFrame(window, text="Meta: ")
-    meta_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky=tk.W)
-
-    meta_high_level_label, high_level_combobox = labelCombobox(meta_frame, "High Level: ", 0, ["Tee", "Approach", "Pitch", "Bunker", "Chip", "Putt"])
-
-    meta_lie_label, meta_lie_entry = LabelEntry(meta_frame, "Lie: ",1)
-
-    meta_aim_label, meta_aim_entry = LabelEntry(meta_frame, "Aim",2)
-
-    # Hist Section
-    hist_frame = ttk.LabelFrame(window, text="Hist:")
-    hist_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky=tk.W)
-
-    hist_club_choice_label, hist_club_choice_entry = LabelEntry(hist_frame, "Club Choice: ", 0)
-
-    hist_desc_label, hist_desc_entry = LabelEntry(hist_frame, "Desc: ", 1)
+        user_inputs = [submitList[i].get() for i in range(len(submitList))]
+        if self.shot == 1:
+            row=["T"]
+        elif self.putting:
+            row =["P"]
+        else:
+            row = ["A"]
+        
+        row += user_inputs
     
-    hist_height_label, hist_height_entry = LabelEntry(hist_frame, "Height: ", 2)
+        print("Row to be written to CSV:", row)  # Add this line for debugging
 
-    hist_shape_label, hist_shape_entry = LabelEntry(hist_frame, "Shape: ", 3)
+        if not self.putting and user_inputs[-2]:
+            self.putting = True
 
-    hist_direction_label, hist_direction_entry = LabelEntry(hist_frame, "Direction: ", 4)
+        if user_inputs[-1]:
+            self.inHole = True
 
-    hist_distance_label, hist_distance_entry = LabelEntry(hist_frame, "Distance: ", 5)
+        # Append the row to the CSV file
+        with open("./arch/beep.csv", "a", newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            csv_writer.writerow(row)
 
-    hist_end_location_label, hist_end_location_entry = LabelEntry(hist_frame, "End Location: ", 6)
 
-    hist_rating_label, hist_rating_entry = LabelEntry(hist_frame, "Rating: ", 7)
+class Putt(shot):
+    def __init__(self, shot):
+        super().__init__(shot, "Putt")
+        self.onGreen = True
+        self.putt()
+        self.window.mainloop()
+    
+    def putt(self):
 
-    hist_blunders_label, hist_blunders_entry = LabelEntry(hist_frame, "Blunder(s): ", 8)
+        lie_frame = labelFrame(self.window, "Putt", 0, 2)
 
-    # Create and place a submit button
-    submitList = [shot_number_combobox, high_level_combobox, meta_lie_entry, meta_aim_entry,
-           hist_club_choice_entry, hist_desc_entry, hist_height_entry, hist_shape_entry,
-           hist_direction_entry, hist_distance_entry, hist_end_location_entry,
-           hist_rating_entry, hist_blunders_entry]
+        _, segments = labelCombobox(lie_frame, "Segments: ", 3, [str(i) for i in range(1,5)])
+        segments.current(0)
 
-    submit_button = ttk.Button(window, text="Submit", command=lambda: submit_button_clicked(submitList))
+        segs = []
+        for x in range(int(segments.get())):
+            lie_topography_combobox, lie_topography_severity_combobox = sideCar(lie_frame, x, self.elevChanges, self.severities, "Topography")
+            lie_elev_combobox, lie_elev_severity_combobox = sideCar(lie_frame, x+1, ["Straight", "Right To Left", "Left To Right"], self.severities,"Ball Location")
+            segs.append(lie_topography_combobox)
+            segs.append(lie_topography_severity_combobox)
+            segs.append(lie_elev_combobox)
+            segs.append(lie_elev_severity_combobox)
 
-    submit_button.grid(row=3, column=0, columnspan=2, pady=20)
+        hist_frame = labelFrame(self.window, "Hist", 1, 3)
 
-def submit_button_clicked(submitList):
-    print("Submit button clicked")  # Add this line for debugging
+        _, hist_desc_entry = LabelEntry(hist_frame, "Desc: ", 1)
+        
+        
 
-    user_inputs = [submitList[i].get() for i in range(len(submitList))]
-  
-    print("Row to be written to CSV:", user_inputs)  # Add this line for debugging
+        _, hist_direction_entry = LabelEntry(hist_frame, "Direction: ", 4)
+        _, hist_distance_entry = LabelEntry(hist_frame, "Distance: ", 5)
+        _, hist_end_location_entry = LabelEntry(hist_frame, "End Location: ", 6)
+        _, hist_rating_entry = LabelEntry(hist_frame, "Rating: ", 7)
+        _, hist_in_hole_entry = labelCheckbox(hist_frame, "In Hole:c", 8, 1)
 
-    # Append the row to the CSV file
-    with open("./arch/beep.csv", "a", newline='') as csvfile:
-        csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(user_inputs)
+        submitList = segs + [
+            
+            lie_topography_combobox, lie_topography_severity_combobox,
+            hist_desc_entry, hist_direction_entry, hist_distance_entry, hist_end_location_entry,
+            hist_rating_entry, hist_in_hole_entry
+        ]
+
+
+        submit_button = ttk.Button(self.window, text="Submit", command=lambda: self.hit_submit(submitList))
+
+        submit_button.grid(row=2, column=0, columnspan=2, pady=20)
+
+
+
+class LoftedShot(shot):
+    def __init__(self, shot):
+        desc = "Tee" if shot == 1 else "Lofted"
+        super().__init__(shot, "Shot #" + str(shot)+ ": " + desc)
+        self.approachShot(shot)
+        self.window.mainloop()
+        
+    
+    def approachShot(self, shot):
+
+        # Meta Section
+        meta_frame = labelFrame(self.window, "Meta", 0, 3)
+        _, high_level_combobox = labelCombobox(meta_frame, "High Level: ", 0, ["Tee", "Approach", "Pitch", "Bunker", "Chip", "Putt"])
+        meta_aim_entry, meta_aim_direction_combobox = sideCar(meta_frame,1, self.aims, self.directions, "Aim: ")
+        
+    
+        lie_frame = labelFrame(self.window, "Lie", 1, 2)
+        lie_topography_combobox, lie_topography_severity_combobox = sideCar(lie_frame, 0, self.elevChanges, self.severities, "Topography")
+        lie_elev_combobox, lie_elev_severity_combobox = sideCar(lie_frame, 1, ["Level", "Above Feet", "Below Feet"], self.severities,"Ball Location")
+        
+        
+        # Hist Section
+        hist_frame = labelFrame(self.window, "Hist", 2, 3)
+        _, hist_club_choice_entry = labelCombobox(hist_frame, "Club Choice: ", 0, self.clubs)
+        _, hist_desc_entry = LabelEntry(hist_frame, "Desc: ", 1)
+        _, hist_height_combobox = labelCombobox(hist_frame, "Height: ", 2, self.heights)
+        hist_shape_combobox,hist_shape_severity_combobox = sideCar(hist_frame, 3, self.shapes, self.severities, "Shape: ")
+        _, hist_direction_combobox = labelCombobox(hist_frame, "Vector From Aim: ", 4, self.directions)
+        _, hist_distance_combobox = labelCombobox(hist_frame, "Distance: ", 5, [str(x) for x in range(0, 350, 50)])
+        _, hist_end_location_combobox = labelCombobox(hist_frame, "End Location: ", 6, self.endLocations)
+        _, hist_rating_combobox = labelCombobox(hist_frame, "Rating: ", 7, [str(i) for i in range(1,11)])
+        _, hist_blunders_combobox = labelCombobox(hist_frame, "Blunder(s): ", 8, self.blunders)
+        _, hist_on_green_entry = labelCheckbox(hist_frame, "Landed on Green", 9, 0)
+        _, hist_in_hole_entry = labelCheckbox(hist_frame, "Landed In Hole", 9, 1)
+
+        
+        if shot < 3:
+            if self.shot == 1:
+                lie_topography_combobox.current(1)
+                lie_elev_combobox.current(0)
+                lie_topography_severity_combobox.current(0)
+            high_level_combobox.current(shot-1)
+
+        # Create and place a submit button
+        submitList = [
+            high_level_combobox, meta_aim_entry, meta_aim_direction_combobox,
+            lie_topography_combobox,lie_topography_severity_combobox, lie_elev_combobox, lie_elev_severity_combobox,
+            hist_club_choice_entry, hist_desc_entry, hist_height_combobox, hist_shape_combobox, hist_shape_severity_combobox,
+            hist_direction_combobox, hist_distance_combobox, hist_end_location_combobox,
+            hist_rating_combobox, hist_blunders_combobox, hist_on_green_entry, hist_in_hole_entry, 
+        ]
+        
+
+        submit_button = ttk.Button(self.window, text="Submit", command=lambda: self.hit_submit(submitList))
+
+        submit_button.grid(row=4, column=0, columnspan=2, pady=20)
+
+
 
     # Add this line for debugging
 
 
-def main():
-    course, gui = process_command_line_arguments()
+class Hole():
+    def __init__(self, hNum):
+        self.num = hNum
+        self.shots = []
+        self.playHole()
+
     
-    theShot = shot(gui, course, 1, 1, 1)
-    print(theShot.shot)
+    def playHole(self):
+        putting = False
+        inHole = False
+        shotNum = 1
+        while not putting:
+            lastShot = LoftedShot(shotNum)
+            self.shots.append(lastShot)
+            if lastShot.putting:
+                putting = True
+            shotNum += 1
+
+        while not inHole:
+            lastShot = Putt(shotNum)
+            self.shots.append(lastShot)
+            if lastShot.inHole:
+                return
+                
+            shotNum += 1
+        
+
+
+def main():
+    course, num_holes = process_command_line_arguments()
+
+    holes = []
+    for x in range(1,int(num_holes)+1):
+        print(x)
+        holes.append(Hole(x))
+    
     return 1
 if __name__ == "__main__":
     sys.exit(main())
